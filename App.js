@@ -1,9 +1,10 @@
 import React from 'react';
-import {Root } from './src/app-routing'
+import Store from './src/store/store';
+
 export default class App extends React.Component {
   render() {
     return (
-      <Root/>
+      <Store/>
     );
   }
 }

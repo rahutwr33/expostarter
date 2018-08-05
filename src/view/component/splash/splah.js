@@ -5,14 +5,21 @@ import {
 } from 'react-native' ;
  
 const splashImage = require("./splash.jpg");
-export const Splash = (props) => {
-
+export default class Splash extends React.Component {
+  constructor(props){
+      super(props)
+  }
+componentWillMount(){
   setTimeout(() => {
-    props.navigation.navigate('Login',null,null)
+    this.props.navigation.navigate('Login',null,null)
   }, 1000);
-  return(
-    <Image source={splashImage} style={styles.splash}/>
-  )
+}
+
+  render(){
+    return(
+      <Image source={splashImage} style={styles.splash}/>
+    )
+  }
 }
 
 const styles = StyleSheet.create({
