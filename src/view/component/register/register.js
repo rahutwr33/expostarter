@@ -71,7 +71,7 @@ class Register extends React.Component {
             <Item error={hasError}>
                 <Input
                     placeholder={input.name == 'email' ? 'Email' : input.name == 'fullname' ? 'Full Name' : 'Password'}
-                    {...input}
+                    {...input }
                     style={{ fontFamily: 'sans-serif-medium' }}
                 />
                 {hasError ? <Text>{error}</Text> : <Text />}
