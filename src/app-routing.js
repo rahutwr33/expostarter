@@ -1,7 +1,7 @@
 import { createStackNavigator } from 'react-navigation';
-import Register from './view/component/register/register'
-import Login from './view/component/login/login'
-import Splash  from './view/component/splash/splah'
+import Register from './component/register/register'
+import Login from './component/login/login'
+import Splash  from './component/splash/splash'
 export const Root = createStackNavigator({
                               Splash: {
                                 screen: Splash,
@@ -17,16 +17,17 @@ export const Root = createStackNavigator({
                                     textAlign:"center", 
                                     flex:0.8
                                    },
-                                  // headerStyle:{ 
-                                  //   alignItems: 'center',
-                                  //   justifyContent: 'center',
-                                  // },
+                                  
                                 },
                               },
                               Register: {
                                 screen: Register,
                                 navigationOptions: {
-                                  title: 'Register' 
+                                  title: 'Register',
+                                  headerTitleStyle: {
+                                    textAlign:"center", 
+                                    flex:0.8
+                                   }, 
                                 },
                               },
                              

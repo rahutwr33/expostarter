@@ -1,22 +1,29 @@
 import {LOGIN_TYPE, REGISTER_TYPE , LOGOUT_TYPE} from './action-types'
 
-function Login(data) {
+function login(data) {
     return {
       type: LOGIN_TYPE,
-      data
+      payload : {
+        
+      }
     }
   }
 
-  function Register(data) {
+  function register(data) {
+    console.log("111111111111",data)
     return {
       type: REGISTER_TYPE,
-      data
+      payload : {
+
+      }
     }
   }
 
-  function Logout(data) {
+  function logout(data) {
     return {
       type: LOGOUT_TYPE,
-      data
+      payload : {
+        
+      }
     }
   }
