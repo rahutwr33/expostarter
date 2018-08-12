@@ -1,8 +1,5 @@
 {
-  "expoServerPort": 19000,
+  "expoServerPort": null,
   "packagerPort": 19001,
-  "packagerPid": 4688,
-  "expoServerNgrokUrl": "https://vb-t6h.rahultwr33.expostarter.exp.direct",
-  "packagerNgrokUrl": "https://packager.vb-t6h.rahultwr33.expostarter.exp.direct",
-  "ngrokPid": 14231
+  "packagerPid": 14636
 }

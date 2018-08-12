@@ -1,19 +1,31 @@
 import React, { Component } from 'react';
+
 import {
       StyleSheet,
       Image,
-      View
+      View,
+      AsyncStorage
 } from 'react-native' ;
+import { reject } from '../../../node_modules/any-promise';
  
 const splashImage = require("./splash.png");
 export default class Splash extends React.Component {
   constructor(props){
       super(props)
   }
+  
 componentWillMount(){
-  setTimeout(() => {
-    this.props.navigation.navigate('Login',null,null)
-  }, 1000);
+  const {navigation} = this.props;
+  AsyncStorage.getItem('token')
+        .then(res => {
+          if (res !== null) {
+            navigation.navigate('Dashboard',null,null);
+          }else{
+            setTimeout(() => {
+              navigation.navigate('Login',null,null)
+            }, 1000);
+          }
+        }).catch(err =>console.log(err));    
 }
 
   render(){

@@ -2,90 +2,77 @@ import React from 'react'
 import {
     View,
     Text,
-    TouchableHighlight,
     TouchableOpacity,
     StyleSheet,
-    BackHandler,
-    Dimensions
 } from 'react-native';
 import {
     Button,
     Input,
-    Item
+    Item,
+    Spinner,
+    Toast 
 } from 'native-base';
-import { Field, reduxForm } from 'redux-form';
-
-const validate = values => {
-    const error = {};
-    error.fullname = '';
-    error.email = '';
-    error.name = '';
-
-    var fullname = values.fullname;
-    var email = values.email;
-    var password = values.password;
-    if (values.fullname === undefined) {
-        fullname = '';
-    }
-    if (values.email === undefined) {
-        email = '';
-    }
-    if (values.password === undefined) {
-        password = '';
-    }
-
-    if (email.length < 8 && email !== '') {
-        error.email = 'too short';
-    }
-
-    if (!email.includes('@') && email !== '') {
-        error.email = '@ not included';
-    }
-    if (password.length > 8) {
-        error.password = 'max 8 characters';
-    }
-    return error;
-};
+import { connect } from 'react-redux';
+import { registerUser } from "../../store/actions/auth";
 class Register extends React.Component {
     constructor(props) {
         super(props);
-        this.handleClick = this.handleClick.bind(this) 
-    }
-    componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', function () {
-            if (!this.onMainScreen()) {
-                this.goBack();
-                return true;
-            }
-            return false;
-        });
-    }
-    renderInput({ input, label, type, meta: { touched, error, warning } }) {
-
-        var hasError = false;
-        if (error !== undefined) {
-            hasError = true;
+        this.state = {
+           isSpinnerActive:false,
+            toast:false, 
+            username : '',
+            email:'',
+            password:''
         }
-
-        return (
-            <Item error={hasError}>
-                <Input
-                    placeholder={input.name == 'email' ? 'Email' : input.name == 'fullname' ? 'Full Name' : 'Password'}
-                    {...input }
-                    style={{ fontFamily: 'sans-serif-medium' }}
-                />
-                {hasError ? <Text>{error}</Text> : <Text />}
-            </Item>
-        )
+        this.handleClick = this.handleClick.bind(this) 
+        this.onChangetext = this.onChangetext.bind(this)
     }
+
+    
+   
+    componentWillReceiveProps(nextProps){
+        const {register,navigation} = nextProps;
+        const {regitser_success} = register;
+        if(regitser_success && regitser_success.success){
+          this.setState({isSpinnerActive:false});
+          Toast.show({
+            text: regitser_success.message,
+            buttonText: "Okay",
+            duration: 1000
+          })
+        setTimeout(() => {
+            navigation.navigate('Login',null,null);
+        }, 1000); 
+
+        }else{
+            this.setState({isSpinnerActive:false});
+            Toast.show({
+                text: regitser_success.message,
+                buttonText: "warning",
+                duration: 3000
+              })
+            }
+        }
+    
 
     handleClick = () =>{
         this.props.navigation.navigate('Login',null,null)
     }
 
-    render() {
-        const { handleSubmit, reset } = this.props;
+    onChangetext=(key,value)=>{
+        this.setState({ 
+            [key]: value,
+         })
+    }
 
+    _register = ()=>{
+       const {registerUser} = this.props;
+       registerUser(this.state);
+       this.setState({isSpinnerActive:true})
+    }
+
+    render() {
+        
         return (
             <View style={styles.container}>
                 <View style={styles.container1}>
@@ -99,11 +86,35 @@ class Register extends React.Component {
                     </View>
                     <View style={styles.container2}>
                         <View style={styles.form}>
-                            <Field name="fullname" component={this.renderInput} />
-                            <Field name="email" component={this.renderInput} />
-                            <Field name="password" component={this.renderInput} />
+                            <Item> 
+                                <Input 
+                                name="username" 
+                                placeholder='User Name'
+                                onChangeText={e=>this.onChangetext('username',e)} 
+                                />
+                            </Item>                           
+                             <Item> 
+                               <Input 
+                               name="email" 
+                               placeholder='Email'
+                               onChangeText={e=>this.onChangetext('email',e)}
+                               />
+                            </Item>
+                            <Item> 
+                                <Input 
+                                name="password"   
+                                placeholder='Password'
+                                onChangeText={e=>this.onChangetext('password',e)}
+                                />
+                            </Item>
+
+                            {
+                                this.state.isSpinnerActive &&
+                                <Spinner color='red' />
+                            }
+                            
                            
-                            <Button block danger style={styles.loginbutton}>
+                            <Button block danger style={styles.loginbutton} onPress={this._register}>
                                 <Text style={styles.loginbtnStyle}>Register</Text>
                             </Button>
                         </View>
@@ -123,6 +134,8 @@ class Register extends React.Component {
         )
     }
 }
+
+
 
 
 const styles = StyleSheet.create({
@@ -221,9 +234,12 @@ const styles = StyleSheet.create({
 
     }
 })
+ mapStateToProps = (state) => {
+    return  {
+        register : state.register 
+    }
+  }
 
-export default reduxForm({
-    form: 'register',
-    validate
-})(Register);
+export default connect(mapStateToProps,{registerUser})(Register)
+
 

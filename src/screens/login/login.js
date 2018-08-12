@@ -3,41 +3,69 @@ import {
     View,
     Text,
     TouchableOpacity,
+    AsyncStorage,
     StyleSheet,
-    BackHandler,
 } from 'react-native';
 import {
     Button,
     Input,
-    Item
+    Item,
+    Spinner,
+    Toast 
 } from 'native-base';
-
 import { connect } from 'react-redux';
-import { register } from "../../store/actions/auth";
-class Register extends React.Component {
+import { loginUser } from "../../store/actions/auth";
+
+class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            fullname : '',
-            email:'',
-            password:''
-        }
-        this.handleClick = this.handleClick.bind(this) 
-        this.onChangetext = this.onChangetext.bind(this)
+            isSpinnerActive:false,
+             toast:false, 
+             username:'',
+             password:''
+         }
+        this.handleClick = this.handleClick.bind(this)
     }
-    componentDidMount() {
-        BackHandler.addEventListener('hardwareBackPress', function () {
-            if (!this.onMainScreen()) {
-                this.goBack();
-                return true;
-            }
-            return false;
-        });
-    }
-   
 
+    componentWillMount = () => {
+        AsyncStorage.getItem('token')
+        .then(res => {
+          if (res !== null) {
+            navigation.navigate('Dashboard',null,null);
+          }
+        }).catch(err => reject(err));
+    
+    }
+    
+
+    componentWillReceiveProps(nextProps){
+        const {login,navigation} = nextProps;
+        const {login_success} = login;
+        if(login_success && login_success.success){
+          this.setState({isSpinnerActive:false});
+          Toast.show({
+            text: login_success.message,
+            buttonText: "Okay",
+            duration: 1000
+          });
+          AsyncStorage.setItem('token', login_success.token);
+          AsyncStorage.setItem('user', JSON.stringify(login_success.user));
+          setTimeout(() => {
+            navigation.navigate('Dashboard',null,null);
+        }, 1000); 
+        }else{
+            this.setState({isSpinnerActive:false});
+            Toast.show({
+                text: login_success.message,
+                buttonText: "warning",
+                duration: 3000
+              })
+            }
+        }
+  
     handleClick = () =>{
-        this.props.navigation.navigate('Login',null,null)
+        this.props.navigation.navigate('Register',null,null)
     }
 
     onChangetext=(key,value)=>{
@@ -46,14 +74,14 @@ class Register extends React.Component {
          })
     }
 
-    _register = ()=>{
-      const  {dispatch} = this.props;
-      console.log(this.register ,register)
-      dispatch(register(this.state))
-    }
+    _login = ()=>{
+         const {loginUser} = this.props;
+        loginUser(this.state);
+        this.setState({isSpinnerActive:true})
+     }
 
     render() {
-        console.log(this.props)
+
         return (
             <View style={styles.container}>
                 <View style={styles.container1}>
@@ -67,18 +95,11 @@ class Register extends React.Component {
                     </View>
                     <View style={styles.container2}>
                         <View style={styles.form}>
-                            <Item> 
-                                <Input 
-                                name="fullname" 
-                                placeholder='Full Name'
-                                onChangeText={e=>this.onChangetext('fullname',e)} 
-                                />
-                            </Item>                           
-                             <Item> 
+                        <Item> 
                                <Input 
-                               name="email" 
-                               placeholder='Email'
-                               onChangeText={e=>this.onChangetext('email',e)}
+                               name="username" 
+                               placeholder='Username'
+                               onChangeText={e=>this.onChangetext('username',e)}
                                />
                             </Item>
                             <Item> 
@@ -88,32 +109,32 @@ class Register extends React.Component {
                                 onChangeText={e=>this.onChangetext('password',e)}
                                 />
                             </Item>
-                           
-                            <Button block danger style={styles.loginbutton} onPress={this._register}>
-                                <Text style={styles.loginbtnStyle}>Register</Text>
+                            {
+                                this.state.isSpinnerActive &&
+                                <Spinner color='red' />
+                            }
+
+                            <Button block danger style={styles.loginbutton}  onPress={this._login}>
+                                <Text style={styles.loginbtnStyle}>Login</Text>
                             </Button>
+                            <TouchableOpacity >
+                            <View style={styles.forgetPassword}>
+                                <Text style={styles.forgetText}>Forgot Password </Text>
+                            </View>
+                            </TouchableOpacity >
                         </View>
                     </View>
                 </View>
-                
                 <View style={styles.bottomtext}>
                     <View style={styles.createaccount}>
-                        <Text style={styles.createaccounttext}>Already have Account : </Text>
-                        <TouchableOpacity onPress={this.handleClick} >
-                        <Text style={styles.linktext}>Login</Text>
-                        </TouchableOpacity>
+                        <Text style={styles.createaccounttext}>Create an Account : </Text>
+                        <Text style={styles.linktext} onPress={this.handleClick}>Register</Text>
                     </View>
                 </View>
-               
             </View>
         )
     }
 }
-
-function mapStateToProps(state) {
-    console.log("11111111111",state)
-    return state
-  }
 
 
 const styles = StyleSheet.create({
@@ -169,8 +190,8 @@ const styles = StyleSheet.create({
     },
     form: {
         margin: 10,
-        backgroundColor: 'white',
-        height: 230,
+        //backgroundColor: 'white',
+        height: 200,
 
     },
     loginbutton: {
@@ -212,6 +233,12 @@ const styles = StyleSheet.create({
 
     }
 })
-export default connect(mapStateToProps ,register )(Register)
 
+mapStateToProps = (state) => {
+    return  {
+        login : state.login 
+    }
+  }
+
+export default connect(mapStateToProps,{loginUser})(Login)
 

@@ -1,8 +1,11 @@
 import { createStackNavigator } from 'react-navigation';
-import Register from './component/register/register'
-import Login from './component/login/login'
-import Splash  from './component/splash/splash'
-export const Root = createStackNavigator({
+import Register from './screens/register/register'
+import Login from './screens/login/login'
+import Splash  from './screens/splash/splash'
+import Dashboard from './screens/dashboard/dashboard';
+
+
+export const Routes = createStackNavigator({
                               Splash: {
                                 screen: Splash,
                                 navigationOptions: {
@@ -30,7 +33,16 @@ export const Root = createStackNavigator({
                                    }, 
                                 },
                               },
-                             
+                              Dashboard: {
+                                screen: Dashboard,
+                                navigationOptions: {
+                                  title: 'Dashboard',
+                                  headerTitleStyle: {
+                                    textAlign:"center", 
+                                    flex:0.8
+                                   }, 
+                                }
+                              }
                        },
                        {
                          initialRouteName : 'Splash'
