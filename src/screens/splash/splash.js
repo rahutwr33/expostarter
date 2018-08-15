@@ -18,6 +18,7 @@ componentWillMount(){
   const {navigation} = this.props;
   AsyncStorage.getItem('token')
         .then(res => {
+          console.log(res)
           if (res !== null) {
             navigation.navigate('Dashboard',null,null);
           }else{
@@ -39,13 +40,12 @@ componentWillMount(){
 
 const styles = StyleSheet.create({
   container:{
-    flex: 1,
+    flex: 1 , 
+    justifyContent: 'center' , 
+    alignItems: 'center' ,
   },
   splash: {
-    flex: 1,
-    justifyContent: 'center',
-    resizeMode: 'stretch',
-    marginLeft:10
+  
   }
 })
 

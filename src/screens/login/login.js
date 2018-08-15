@@ -80,13 +80,24 @@ class Login extends React.Component {
         this.setState({isSpinnerActive:true})
      }
 
+     facebooklogin = ()=>{
+         console.log("111111111111")
+        const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('1319822428116440', {
+            permissions: ['public_profile'],
+          });
+        if (type === 'success') {
+          const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+          console.log(response.json())
+        }
+     }
+
     render() {
 
         return (
             <View style={styles.container}>
                 <View style={styles.container1}>
                     <View style={styles.social_button}>
-                        <Button bordered style={styles.btn1}>
+                        <Button bordered style={styles.btn1} onPress={this.facebooklogin}> 
                             <Text style={styles.facebookstyle}>Facebbok</Text>
                         </Button>
                         <Button bordered style={styles.btn2}>
@@ -106,6 +117,7 @@ class Login extends React.Component {
                                 <Input 
                                 name="password"   
                                 placeholder='Password'
+                                secureTextEntry={true}
                                 onChangeText={e=>this.onChangetext('password',e)}
                                 />
                             </Item>

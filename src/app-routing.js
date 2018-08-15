@@ -2,7 +2,7 @@ import { createStackNavigator } from 'react-navigation';
 import Register from './screens/register/register'
 import Login from './screens/login/login'
 import Splash  from './screens/splash/splash'
-import Dashboard from './screens/dashboard/dashboard';
+import HomeScreenRouter from './screens/dashboard';
 
 
 export const Routes = createStackNavigator({
@@ -34,13 +34,9 @@ export const Routes = createStackNavigator({
                                 },
                               },
                               Dashboard: {
-                                screen: Dashboard,
+                                screen: HomeScreenRouter,
                                 navigationOptions: {
-                                  title: 'Dashboard',
-                                  headerTitleStyle: {
-                                    textAlign:"center", 
-                                    flex:0.8
-                                   }, 
+                                  header: null  
                                 }
                               }
                        },

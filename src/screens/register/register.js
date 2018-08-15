@@ -104,6 +104,7 @@ class Register extends React.Component {
                                 <Input 
                                 name="password"   
                                 placeholder='Password'
+                                secureTextEntry={true}
                                 onChangeText={e=>this.onChangetext('password',e)}
                                 />
                             </Item>

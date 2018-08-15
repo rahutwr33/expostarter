@@ -7,7 +7,7 @@ import { Font, AppLoading } from "expo";
 import {
   Root ,
 } from 'native-base';
-import {Routes } from '../app-routing'
+import {Routes,Drawer } from '../app-routing'
 import ReduxThunk from 'redux-thunk';
 const middleware = applyMiddleware(ReduxThunk);
 
@@ -39,6 +39,7 @@ const store = createStore(allReducers ,{} , middleware);
       <Provider store= {store}>
          <Root>
               <Routes/>
+              
           </Root>
        </Provider>
     )
